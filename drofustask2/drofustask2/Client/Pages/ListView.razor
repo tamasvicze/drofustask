@@ -1,0 +1,50 @@
+﻿@page "/listview"
+@inject HttpClient Http
+
+<h3>List View</h3>
+
+@if (contacts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Job Title</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var contact in contacts)
+        {
+            <tr>
+                <td>@contact.Name</td>
+                <td>@contact.JobTitle</td>
+                <td><a href="/detailview/@contact.Id">View Details</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Contact> contacts;
+    private bool loadFailed = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            contacts = await Http.GetFromJsonAsync<List<Contact>>("api/contacts");
+        }
+        catch (HttpRequestException ex)
+        {
+            loadFailed = true;
+            Console.WriteLine($"Error fetching contact details: {ex.Message}");
+        }
+    }
+}

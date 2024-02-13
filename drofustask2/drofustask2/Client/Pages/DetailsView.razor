@@ -1,0 +1,43 @@
+﻿@page "/detailview/{Id:int}"
+@inject HttpClient Http
+
+<h3>Detail View</h3>
+
+@if (contact == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <dl class="row">
+        <dt class="col-sm-3">Name</dt>
+        <dd class="col-sm-9">@contact.Name</dd>
+        <dt class="col-sm-3">Job Title</dt>
+        <dd class="col-sm-9">@contact.JobTitle</dd>
+        <dt class="col-sm-3">Phone</dt>
+        <dd class="col-sm-9">@contact.Phone</dd>
+        <dt class="col-sm-3">Address</dt>
+        <dd class="col-sm-9">@contact.Address</dd>
+    </dl>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Contact? contact;
+    private bool loadFailed = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            contact = await Http.GetFromJsonAsync<Contact>($"api/contacts/{Id}");
+        }
+        catch (HttpRequestException ex)
+        {
+            loadFailed = true;
+            Console.WriteLine($"Error fetching contact details: {ex.Message}");
+        }
+    }
+}

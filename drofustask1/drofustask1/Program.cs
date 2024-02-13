@@ -1,48 +1,76 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using drofustask1.Interfaces;
+using System.Security.Cryptography.X509Certificates;
 
 namespace drofustask1
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
-            VendingMachine();
+            // Initialize the product list and services
+            var products = ProductList.Products;
+
+            IProductService productService = new ProductService(products);
+            ICreditService creditService = new CreditService();
+
+            // Create and run the vending machine with the services
+            VendingMachine vendingMachine = new VendingMachine(productService, creditService);
+            vendingMachine.Run();
         }
+    }
 
-        static void VendingMachine()
+    class VendingMachine(IProductService productService, ICreditService creditService)
+    {
+        public void Run()
         {
-            
-            Console.WriteLine("Enter command:");
-
             bool keepRunning = true;
             while (keepRunning)
             {
-                string input = Console.ReadLine().ToLower();
-                string[] parts = input.Split(' ');
+                Console.WriteLine("\nEnter command (help for commands):");
+                var input = Console.ReadLine().ToLower();
+                var command = input.Split(' ');
 
-                if (parts[0] == "list")
+                if (command[0] == "list")
                 {
-                    Methods.ListAllProducts();
+                    productService.ListAllProducts();
                 }
-                else if (parts[0] == "insert")
+                else if (command[0] == "insert")
                 {
-                    Methods.InsertMoney(parts);
+                    if (command.Length > 1 && int.TryParse(command[1], out var amount))
+                    {
+                        creditService.InsertMoney(amount);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid amount.");
+                    }
                 }
-                else if (parts[0] == "recall")
+                else if (command[0] == "recall")
                 {
-                    Methods.RecallMoney();
+                    creditService.RecallMoney();
                 }
-                else if (parts[0] == "order")
+                else if (command[0] == "order")
                 {
-                    Methods.OrderProduct(parts);
+                    if (command.Length > 1)
+                    {
+                        productService.OrderProduct(command[1]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Specify a product name.");
+                    }
                 }
-                else if (parts[0] == "exit")
+                else if (command[0] == "exit")
                 {
                     keepRunning = false;
                 }
+                else if (command[0] == "help")
+                {
+                    Console.WriteLine("Available commands: list, insert <amount>, recall, order <productName>, exit");
+                }
                 else
                 {
-                    Console.WriteLine("Unknown command or invalid syntax.");
+                    Console.WriteLine("Unknown command.");
                 }
             }
         }

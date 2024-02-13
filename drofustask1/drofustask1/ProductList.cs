@@ -6,70 +6,21 @@ using System.Threading.Tasks;
 
 namespace drofustask1
 {
-    public class ProductList
+    public static class ProductList
     {
-        public static List<Product> products = new()
+        public static List<Product> Products { get; set; } = new()
         {
-            new()
-            {
-                Name = "Snickers",
-                Price = 10
-            },
-
-            new()
-            {
-                Name = "Twix",
-                Price = 20
-            },
-
-            new()
-            {
-
-                Name = "Mars",
-                Price = 30
-            },
-
-            new()
-            {
-                Name = "Cola",
-                Price = 10
-            },
-
-            new()
-            {
-                Name = "Fanta",
-                Price = 20
-            },
-
-            new()
-            {
-                Name = "Solo",
-                Price = 30
-            },
-
-            new()
-            {
-                Name = "Smash",
-                Price = 10
-            },
-
-            new()
-            {
-                Name = "Pringles",
-                Price = 20
-            },
-
-            new()
-            {
-                Name = "TicTac",
-                Price = 25
-            },
-
-            new()
-            {
-                Name = "Bounty",
-                Price = 20
-            }
+            new Product("Snickers", 10),
+            new Product("Twix", 20),
+            new Product("Mars", 30),
+            new Product("Cola", 10),
+            new Product("Fanta", 20),
+            new Product("Solo", 30),
+            new Product("Smash", 10),
+            new Product("Pringles", 20),
+            new Product("TicTac", 25),
+            new Product("Bounty", 20)
+            // Add more products as needed
         };
     }
 }

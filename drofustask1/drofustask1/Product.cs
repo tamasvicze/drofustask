@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace drofustask1
-{ 
-    public class Product
+{
+    public class Product(string name, int price)
     {
-        public string Name { get; set; }
-        public int Price { get; set; }
+        public string Name { get; set; } = name;
+        public int Price { get; set; } = price;
     }
 }
